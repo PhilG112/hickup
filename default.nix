@@ -1,6 +1,20 @@
+{ compiler ? "ghc902" }:
+
 let
-    pkgs = import <nixpkgs> {};
+    config = {
+        packageOverrides = pkgs: rec {
+            haskell = pkgs.haskell // {
+                packages = pkgs.haskell.packages // {
+                    "${compiler}" = pkgs.haskell.packages."${compiler}".override {
+                        overrides = haskellPackagesNew: haskellPackagesOld: rec {
+                            hickup = haskellPackagesNew.callPackage ./hickup.nix {};    
+                        };
+                    };
+                };
+            };
+        };
+    };
+    pkgs = import <nixpkgs> { inherit config; };
 in
-    {
-        hickup = pkgs.haskellPackages.callPackage ./hickup.nix {};
+    { hickup = pkgs.haskell.packages.${compiler}.hickup;
     }

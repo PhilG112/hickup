@@ -1,6 +1,7 @@
 module Main where
 
-import Servant
+func :: Int -> Int
+func a = a
 
 main :: IO ()
-main = putStrLn "Hello, Haskell!"
+main = putStrLn ""
